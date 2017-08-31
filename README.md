@@ -1,4 +1,4 @@
-[Medical Record Sharing](https://guide.blockchain.z.com/docs/oss/region-token/) - GMO Blockchain Open Source
+[Region Token](https://guide.blockchain.z.com/docs/oss/region-token/) - GMO Blockchain Open Source
 ==================================================
 
 License
