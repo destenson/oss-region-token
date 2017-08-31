@@ -33,6 +33,10 @@
             }
         },
         "dialog": {
+            "err-no-store-active": {
+                "title": "Store status error",
+                "msg": "Store status is not active."
+            },
             "err-no-token-account": {
                 "title": "Unregistered account",
                 "msg": "No demo token creator account exists. \nCreate an account and save it to local storage."
@@ -128,10 +132,6 @@
             }
         },
         "dialog": {
-            "err-no-store-active": {
-                "title": "Store status error",
-                "msg": "Store status is not active."
-            },
             "err-no-user-balance": {
                 "title": "User's balance error.",
                 "msg": "User's balance shotage."

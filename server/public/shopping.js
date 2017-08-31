@@ -186,8 +186,8 @@ var assighToken = function() {
                     getStoreStatus(function(status) {
                         if (!status) {
                             DEMO_UTIL.okDialog(
-                                demoMsg('shopping.dialog.err-no-store-active.title'),
-                                demoMsg('shopping.dialog.err-no-store-active.msg')
+                                demoMsg('common.dialog.err-no-store-active.title'),
+                                demoMsg('common.dialog.err-no-store-active.msg')
                             );
                             DEMO_UTIL.stopLoad();
                             return;
@@ -266,8 +266,8 @@ var consumeToken = function() {
                     getStoreStatus(function(status) {
                         if (!status) {
                             DEMO_UTIL.okDialog(
-                                demoMsg('shopping.dialog.err-no-store-active.title'),
-                                demoMsg('shopping.dialog.err-no-store-active.msg')
+                                demoMsg('common.dialog.err-no-store-active.title'),
+                                demoMsg('common.dialog.err-no-store-active.msg')
                             );
                             DEMO_UTIL.stopLoad();
                             return;
@@ -310,9 +310,6 @@ var getStoreStatus = function (callback) {
             return;
         }
         console.log(res);
-//                    var balance = res[0].toNumber(10);
-//                    var liabilities = res[1].toNumber(10);
-//                    var maxLiabilities = res[2].toNumber(10);
         callback(res[3]);
     });
 };

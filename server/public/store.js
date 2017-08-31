@@ -379,7 +379,17 @@ var removeTerminal = function(obj) {
             contract.sendTransaction('', 'ProxyController', 'removeTerminal', [tokenAddress, key, terminal, nonce, sign], PROXY_CONTROLLER_ABI, function(err, res) {
                 if (err) {
                     console.error(err);
-                    alert('error');
+                    getStoreStatus(key, function(status) {
+                        DEMO_UTIL.stopLoad();
+                        if (!status) {
+                            DEMO_UTIL.okDialog(
+                            demoMsg('common.dialog.err-no-store-active.title'),
+                            demoMsg('common.dialog.err-no-store-active.msg')
+                            );
+                            return;
+                        }
+                        alert('error');
+                    });
                     return;
                 }
                 console.log(res);
@@ -421,7 +431,17 @@ var addTerminal = function(obj) {
                 contract.sendTransaction('', 'ProxyController', 'addTerminal', [tokenAddress, key, _newAccount.getAddress(), nonce, sign], PROXY_CONTROLLER_ABI, function(err, res) {
                     if (err) {
                         console.error(err);
-                        alert('error');
+                        getStoreStatus(key, function(status) {
+                            DEMO_UTIL.stopLoad();
+                            if (!status) {
+                                DEMO_UTIL.okDialog(
+                                demoMsg('common.dialog.err-no-store-active.title'),
+                                demoMsg('common.dialog.err-no-store-active.msg')
+                                );
+                                return;
+                            }
+                            alert('error');
+                        });
                         return;
                     }
                     console.log(res);
@@ -496,5 +516,21 @@ var createStore = function() {
                 });
             });
         });
+    });
+};
+
+var getStoreStatus = function (storeKey, callback) {
+    var storeMasterAccount = LOCAL_STORAGE.getStoreMasterAccount(storeKey);
+    var contract = ETH_UTIL.getContract(storeMasterAccount);
+    var tokenAddress = LOCAL_STORAGE.getTokenAddress();
+    var storeAddress, balance, maxLiabilities, active;
+    contract.call('', 'ProxyController', 'getStoreInfo', [tokenAddress, storeKey], PROXY_CONTROLLER_ABI, function(err, res) {
+        if (err) {
+            console.error(err);
+            alert('error');
+            return;
+        }
+        console.log(res);
+        callback(res[3]);
     });
 };
