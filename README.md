@@ -60,7 +60,7 @@ See [Contract Creation Process](https://guide.blockchain.z.com/docs/dapp/contrac
   2. Use 'networks.(network-id).address' and 'abi' values to register as Contract ABIs on admin console
 
 ### Configure for client
-Create server/public/js/config.json based on server/public/js/config_template.json. Edit "CNS" which you deployed.
+Create server/public/js/config.js based on server/public/js/config_template.js. Edit "CNS" which you deployed.
 
 ### Start application
 ```bash
