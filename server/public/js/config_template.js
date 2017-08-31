@@ -1,0 +1,1 @@
+const CNS = 'Please set your ContractNameService\'s contract address';

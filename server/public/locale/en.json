@@ -1,0 +1,161 @@
+{
+    "common": {
+        "page": {
+            "index": "HOME",
+            "create": "TOKEN",
+            "store": "PARTICIPANTS",
+            "shopping": "SHOPPING"
+        },
+        "content": {
+            "select": "SELECT..",
+            "demo-explain": "In this demo you can create a new token on the block chain, grant tokens (points) at the store, and confirm point usage.",
+            "active": "ACTIVE",
+            "inactive": "INACTIVE"
+        },
+        "caption": {
+            "token": {
+                "name": "Token Name",
+                "symbol": "Symbol",
+                "supply": "Total Supply"
+            },
+            "store": {
+                "key": "KEY",
+                "name": "Store Name",
+                "max-liabilities": "Max Liabilities",
+                "liabilities": "Liabilities",
+                "balance": "Balance",
+                "active": "Active/Inactive",
+                "terminal": "Terminal (Cashier)"
+            },
+            "shopping": {
+                "user": "End User",
+                "address": "End User Address"
+            }
+        },
+        "dialog": {
+            "err-no-token-account": {
+                "title": "Unregistered account",
+                "msg": "No demo token creator account exists. \nCreate an account and save it to local storage."
+            },
+            "err-no-token-account-env": {
+                "title": "Environment preparation",
+                "msg": "Demo token is not created.\nTo transition to token page."
+            },
+            "err-no-store": {
+                "title": "Unregistered member store",
+                "msg": "No demo merchants exist.\nPlease register a member store."
+            },
+            "err-required": {
+                "title": "Input error",
+                "msg": "There are unedited items."
+            }
+        }
+    },
+    "index": {
+        "title": "Region Token"
+    },
+    "create": {
+        "content": {
+        },
+        "form": {
+            "create-token": {
+                "description": "Create new token for demonstration",
+                "submit": "Create Token"
+            }
+        },
+        "dialog": {
+            "token-created": {
+                "title": "Token created",
+                "msg": "Token created successfully."
+            },
+            "err-no-account": {
+                "title": "Unregistered account",
+                "msg": "No demo token creator account exists. \nCreate an account and save it to local storage."
+            },
+            "err-token-name-too-long": {
+                "title": "Input error",
+                "msg": "The token name must be 32 bytes or less."
+            }
+        }
+    },
+    "store": {
+        "content": {
+        },
+        "form": {
+            "create-store": {
+                "description": "Add token using member store.",
+                "submit": "Add Store"
+            },
+            "send-max-liabilities": {
+                "submit": "Change"
+            },
+            "send-liabilities": {
+                "submit": "Settle"
+            },
+            "active": {
+                "submit": "Switch"
+            },
+            "add-terminal": {
+                "submit": "Add"
+            },
+            "remove-terminal": {
+                "submit": "Delete"
+            }
+        },
+        "dialog": {
+            "err-no-terminal-selected": {
+                "title": "Terminal selection error",
+                "msg": "Please select a deletion target terminal."
+            },
+            "err-no-balance-to-liquidate": {
+                "title": "No balance",
+                "msg": "There is no balance to be settled."
+            },
+            "err-invalid-max-liabilities": {
+                "title": "Max liabilities input invalid",
+                "msg": "Please enter a positive numeric upper bound."
+            }
+        }
+    },
+    "shopping": {
+        "content": {
+        },
+        "form": {
+            "send-token": {
+                "description": "Assign/Consume token",
+                "get-submit": "Assign Token",
+                "use-submit": "Consume Token "
+            }
+        },
+        "dialog": {
+            "err-no-store-active": {
+                "title": "Store status error",
+                "msg": "Store status is not active."
+            },
+            "err-no-user-balance": {
+                "title": "User's balance error.",
+                "msg": "User's balance shotage."
+            },
+            "err-no-store-balance": {
+                "title": "Store's balance error.",
+                "msg": "Store's balance shotage."
+            },
+            "err-no-terminal": {
+                "title": "Input value error",
+                "msg": "Please select a terminal (cashier)."
+            },
+            "err-no-get-amount": {
+                "title": "Input value error",
+                "msg": "Please enter a positive number for the number of token assignments."
+            },
+            "err-no-use-amount": {
+                "title": "Input value error",
+                "msg": "Please enter a positive number for token consumption."
+            },
+            "err-no-user-account": {
+                "title": "Unregistered end user accounts",
+                "msg": "No demo end user account exists. \nThis generates multiple demo end user accounts and saves them to local storage."
+            }
+        }
+    }
+}

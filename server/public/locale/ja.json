@@ -1,0 +1,161 @@
+{
+    "common": {
+        "page": {
+            "index": "ホーム",
+            "create": "トークン",
+            "store": "加盟店",
+            "shopping": "ショッピング"
+        },
+        "content": {
+            "select": "選択..",
+            "demo-explain": "このデモでは、実際にブロックチェーン上にトークンを生成して、店舗でのトークン（ポイント）付与、利用を確認できます。",
+            "active": "有効",
+            "inactive": "無効"
+        },
+        "caption": {
+            "token": {
+                "name": "トークン名",
+                "symbol": "シンボル",
+                "supply": "供給量"
+            },
+            "store": {
+                "key": "キー",
+                "name": "加盟店名",
+                "max-liabilities": "負債上限",
+                "liabilities": "負債額",
+                "balance": "残高",
+                "active": "有効/無効",
+                "terminal": "端末（レジ）"
+            },
+            "shopping": {
+                "user": "エンドユーザ",
+                "address": "エンドユーザアドレス"
+            }
+        },
+        "dialog": {
+            "err-no-token-account": {
+                "title": "トークン生成アカウント未登録",
+                "msg": "デモ用のトークン生成アカウントが登録されていません。\nトークン生成アカウントを生成してローカルストレージに保存します。"
+            },
+            "err-no-token-account-env": {
+                "title": "環境準備",
+                "msg": "デモ用のトークンが生成されていません。\nトークンページに遷移します。"
+            },
+            "err-no-store": {
+                "title": "加盟店未登録",
+                "msg": "デモ用の加盟店が登録されていません。\n事前に加盟店の登録を行ってください。"
+            },
+            "err-required": {
+                "title": "入力エラー",
+                "msg": "未入力項目があります。"
+            }
+        }
+    },
+    "index": {
+        "title": "地域トークン"
+    },
+    "create": {
+        "content": {
+        },
+        "form": {
+            "create-token": {
+                "description": "デモ用に新しいトークンを発行",
+                "submit": "トークン発行"
+            }
+        },
+        "dialog": {
+            "token-created": {
+                "title": "新規トークン発行完了",
+                "msg": "トークンは正常に発行されました。"
+            },
+            "err-no-account": {
+                "title": "アカウント未登録",
+                "msg": "デモ用のアカウントが登録されていません。\nトークン生成アカウントを生成してローカルストレージに保存します。"
+            },
+            "err-token-name-too-long": {
+                "title": "入力エラー",
+                "msg": "トークン名は32バイト以下である必要があります。"
+            }
+        }
+    },
+    "store": {
+        "content": {
+        },
+        "form": {
+            "create-store": {
+                "description": "トークン利用加盟店追加",
+                "submit": "加盟店登録"
+            },
+            "send-max-liabilities": {
+                "submit": "変更"
+            },
+            "send-liabilities": {
+                "submit": "清算"
+            },
+            "active": {
+                "submit": "切替"
+            },
+            "add-terminal": {
+                "submit": "追加"
+            },
+            "remove-terminal": {
+                "submit": "削除"
+            }
+        },
+        "dialog": {
+            "err-no-terminal-selected": {
+                "title": "端末選択エラー",
+                "msg": "削除対処の端末を選択してください。"
+            },
+            "err-no-balance-to-liquidate": {
+                "title": "残高なし",
+                "msg": "清算対象の残高がありません。"
+            },
+            "err-invalid-max-liabilities": {
+                "title": "負債上限入力不正",
+                "msg": "負債上限は正の数値を入力してください。"
+            }
+        }
+    },
+    "shopping": {
+        "content": {
+        },
+        "form": {
+            "send-token": {
+                "description": "トークン付与/消費",
+                "get-submit": "トークン付与",
+                "use-submit": "トークン消費"
+            }
+        },
+        "dialog": {
+            "err-no-store-active": {
+                "title": "店舗状況エラー",
+                "msg": "店舗のステータスが有効ではありません。"
+            },
+            "err-no-user-balance": {
+                "title": "ユーザ残高エラー",
+                "msg": "ユーザの残高が不足しています。"
+            },
+            "err-no-store-balance": {
+                "title": "店舗残高エラー",
+                "msg": "店舗の残高が不足しています。"
+            },
+            "err-no-terminal": {
+                "title": "入力値エラー",
+                "msg": "付与端末（レジ）を選択してください。"
+            },
+            "err-no-get-amount": {
+                "title": "入力値エラー",
+                "msg": "トークン付与数は正の数値を入力してください。"
+            },
+            "err-no-use-amount": {
+                "title": "入力値エラー",
+                "msg": "トークン消費数は正の数値を入力してください。"
+            },
+            "err-no-user-account": {
+                "title": "エンドユーザアカウント未登録",
+                "msg": "デモ用のエンドユーザアカウントが登録されていません。\nエンドユーザアカウントを複数生成してデモ用にローカルストレージに保存します。"
+            }
+        }
+    }
+}
