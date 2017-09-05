@@ -1,5 +1,5 @@
 var LOCAL_STORAGE = {};
-var _prefix = 'region-token.v2.';
+var _prefix = 'region-token.v1.';
 
 var _tokenAddressKey = _prefix + 'token-address';
 var _creatorAccountKey = _prefix + 'creator';
