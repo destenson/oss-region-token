@@ -1,11 +1,12 @@
 var LOCAL_STORAGE = {};
+var _prefix = 'region-token.v2.';
 
-var _tokenAddressKey = 'region-token.token-address';
-var _creatorAccountKey = 'region-token.creator';
-var _storeMasterAccountsKey = 'region-token.store-masters';
-var _terminalAccountsKey = 'region-token.terminals';
-var _usersAccountKey = 'region-token.users';
-var _storeStatusKey = 'region-token.store-status';
+var _tokenAddressKey = _prefix + 'token-address';
+var _creatorAccountKey = _prefix + 'creator';
+var _storeMasterAccountsKey = _prefix + 'store-masters';
+var _terminalAccountsKey = _prefix + 'terminals';
+var _usersAccountKey = _prefix + 'users';
+var _storeStatusKey = _prefix + 'store-status';
 
 LOCAL_STORAGE.getTokenAddress = function() {
     return localStorage.getItem(_tokenAddressKey);

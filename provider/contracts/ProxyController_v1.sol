@@ -43,9 +43,9 @@ contract ProxyController_v1 is VersionContract, ProxyController {
         logic_v1.transfer(_tokenAddress, _to, _amount, _nonce, _clientSign);
     }
 
-
-    function getParticipantNonce(address _tokenAddress, address _addr) constant returns (uint nonce) {
-        return logic_v1.getParticipantNonce(_tokenAddress, _addr);
+    function getParticipantAndNonce(address _tokenAddress, address _addr) constant returns (address participant, uint nonce) {
+        participant = logic_v1.getParticipant(_tokenAddress);
+        nonce = logic_v1.getParticipantNonce(_tokenAddress, _addr);
     }
 
     function addStore(bytes _sign, address _tokenAddress, bytes32 _storeKey, bytes32 _name, address _storeMasterAddress, uint _maxLiabilities, uint _nonce, bytes _clientSign) {

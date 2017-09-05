@@ -1,15 +1,16 @@
 pragma solidity ^0.4.8;
 
 import './Store.sol';
+import './RegionToken.sol';
 
 contract Participant {
     address public owner;
-    address public token = msg.sender;
+    RegionToken public token;
 
     mapping (bytes32 => address) public stores; // storeKey => storeAddress
-    mapping (address => bool) public storeAddresses; // storeAddress => storeKey
-    mapping (address => address) public storeMasterAddresses; // storeMasterAddress => storeAddress
-    mapping (address => address) public terminalAddresses; // terminalAddress => storeAddress
+    mapping (address => bool) public storeAddress; // storeAddress => createdFlag
+    mapping (address => address) public storeMasterAddrStoreAddr; // storeMasterAddress => storeAddress
+    mapping (address => address) public terminalAddrStoreAddr; // terminalAddress => storeAddress
 
     // nonce for each account
     mapping(address => uint) nonces;
@@ -21,6 +22,12 @@ contract Participant {
 
     function Participant(address _owner) {
         owner = _owner;
+    }
+
+    function setToken() {
+        // just one time ()
+        assert(address(token) == 0);
+        token = RegionToken(msg.sender);
     }
 
     /* ----------- methods ----------------- */
@@ -52,14 +59,13 @@ contract Participant {
         return addStoreInternal(from, _storeKey, _name, _storeMasterAddress, _maxLiabilities);
     }
 
-
     function addStoreInternal(address _from, bytes32 _storeKey, bytes32 _name, address _storeMasterAddress, uint _maxLiabilities) private returns (bool) {
-        if (!isOwner(_from) || existStore(_storeKey) || existStoreMaster(_storeMasterAddress)) return false;
+        if (address(token) == 0 && !isOwner(_from) || existStore(_storeKey) || isStoreMaster(_storeMasterAddress) || token.balanceOf(_storeMasterAddress) > 0) return false;
         StoreStatus(_storeKey, true, true, _maxLiabilities);
         address store = new Store(token, _name, _storeMasterAddress, _maxLiabilities);
         stores[_storeKey] = store;
-        storeAddresses[store] = true;
-        storeMasterAddresses[_storeMasterAddress] = store;
+        storeAddress[store] = true;
+        storeMasterAddrStoreAddr[_storeMasterAddress] = store;
         return true;
     }
 
@@ -129,9 +135,9 @@ contract Participant {
 
 
     function addTerminalInternal(address _from, bytes32 _storeKey, address _terminal) private returns (bool) {
-        if (!ownStoreMaster(_storeKey, _from) || existTerminal(_terminal) || !isActiveStore(_storeKey)) return false;
+        if (!ownStoreMaster(_storeKey, _from) || isTerminal(_terminal) || !isActiveStore(_storeKey) || token.balanceOf(_terminal) > 0) return false;
         Terminal(_storeKey, _terminal, true);
-        terminalAddresses[_terminal] = stores[_storeKey];
+        terminalAddrStoreAddr[_terminal] = stores[_storeKey];
         return Store(stores[_storeKey]).setTerminal(_terminal, true);
     }
 
@@ -156,7 +162,7 @@ contract Participant {
     }
 
     function removeTerminalInternal(address _from, bytes32 _storeKey, address _terminal) internal returns (bool) {
-        if (!ownStoreMaster(_storeKey, _from) || !ownTerminal(_storeKey, _terminal)) return false;
+        if (!ownStoreMaster(_storeKey, _from) || !ownTerminal(_storeKey, _terminal) || !isActiveStore(_storeKey)) return false;
         // not clear terminalStoreKey
         Terminal(_storeKey, _terminal, false);
         return Store(stores[_storeKey]).setTerminal(_terminal, false);
@@ -198,14 +204,6 @@ contract Participant {
         return stores[_storeKey] != 0;
     }
 
-    function existStoreMaster(address _addr) constant returns (bool) {
-        return storeMasterAddresses[_addr] != 0;
-    }
-
-    function existTerminal(address _addr) constant returns (bool) {
-        return terminalAddresses[_addr] != 0;
-    }
-
     function ownStoreMaster(bytes32 _storeKey, address _storeMaster) constant returns (bool) {
         return existStore(_storeKey) && Store(stores[_storeKey]).master() == _storeMaster;
     }
@@ -218,13 +216,16 @@ contract Participant {
         return existStore(_storeKey) && Store(stores[_storeKey]).active();
     }
 
+   function isStore(address _addr) constant returns (bool) {
+        return storeAddress[_addr];
+    }
 
    function isStoreMaster(address _addr) constant returns (bool) {
-        return storeMasterAddresses[_addr] != 0;
+        return storeMasterAddrStoreAddr[_addr] != 0;
     }
 
    function isTerminal(address _addr) constant returns (bool) {
-        return terminalAddresses[_addr] != 0;
+        return terminalAddrStoreAddr[_addr] != 0;
     }
 
     function getStoreName(bytes32 _storeKey) constant returns (bytes32) {
@@ -244,7 +245,7 @@ contract Participant {
     }
 
     function calcEnvHash(bytes32 _functionName) constant returns (bytes32 hash) {
-        hash = sha3(token);
+        hash = sha3(this);
         hash = sha3(hash, _functionName);
     }
 

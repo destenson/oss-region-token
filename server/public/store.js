@@ -266,16 +266,17 @@ var changeMaxLiabilities = function(obj) {
             var creator = LOCAL_STORAGE.getCreatorAccount(key);
             var tokenAddress = LOCAL_STORAGE.getTokenAddress();
             var contract = ETH_UTIL.getContract(creator);
-            var nonce, sign;
-            contract.call('', 'ProxyController', 'getParticipantNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
+            var participantAddress, nonce, sign;
+            contract.call('', 'ProxyController', 'getParticipantAndNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
                 if (err) {
                     console.error(err);
                     alert('error');
                     return;
                 }
-                console.log(res.toString(10));
-                nonce = res.toString(10);
-                creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'uint', 'uint'], [tokenAddress, 'setStoreMaxLiabilitiesWithSign', key, newMaxLiabilities, nonce]), function(err, res) {
+                console.log(res);
+                participantAddress = res[0];
+                nonce = res[1].toString(10);
+                creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'uint', 'uint'], [participantAddress, 'setStoreMaxLiabilitiesWithSign', key, newMaxLiabilities, nonce]), function(err, res) {
                     if (err) {
                         console.error(err);
                         alert('error');
@@ -309,17 +310,18 @@ var changeActive = function(obj) {
     var creator = LOCAL_STORAGE.getCreatorAccount(key);
     var tokenAddress = LOCAL_STORAGE.getTokenAddress();
     var contract = ETH_UTIL.getContract(creator);
-    var nonce, sign;
-    contract.call('', 'ProxyController', 'getParticipantNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
+    var participantAddress, nonce, sign;
+    contract.call('', 'ProxyController', 'getParticipantAndNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
         if (err) {
             console.error(err);
             alert('error');
             return;
         }
-        console.log(res.toString(10));
-        nonce = res.toString(10);
+        console.log(res);
+        participantAddress = res[0];
+        nonce = res[1].toString(10);
         var functionName = active === 'true' ? 'inactivateStore' : 'activateStore';
-        creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'uint'], [tokenAddress, functionName + 'WithSign', key, nonce]), function(err, res) {
+        creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'uint'], [participantAddress, functionName + 'WithSign', key, nonce]), function(err, res) {
             if (err) {
                 console.error(err);
                 alert('error');
@@ -359,16 +361,17 @@ var removeTerminal = function(obj) {
     var storeMasterAccount = LOCAL_STORAGE.getStoreMasterAccount(key);
     var tokenAddress = LOCAL_STORAGE.getTokenAddress();
     var contract = ETH_UTIL.getContract(storeMasterAccount);
-    var nonce, sign;
-    contract.call('', 'ProxyController', 'getParticipantNonce', [tokenAddress, storeMasterAccount.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
+    var participantAddress, nonce, sign;
+    contract.call('', 'ProxyController', 'getParticipantAndNonce', [tokenAddress, storeMasterAccount.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
         if (err) {
             console.error(err);
             alert('error');
             return;
         }
-        console.log(res.toString(10));
-        nonce = res.toString(10);
-        storeMasterAccount.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'address', 'uint'], [tokenAddress, 'removeTerminalWithSign', key, terminal, nonce]), function(err, res) {
+        console.log(res);
+        participantAddress = res[0];
+        nonce = res[1].toString(10);
+        storeMasterAccount.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'address', 'uint'], [participantAddress, 'removeTerminalWithSign', key, terminal, nonce]), function(err, res) {
             if (err) {
                 console.error(err);
                 alert('error');
@@ -411,16 +414,17 @@ var addTerminal = function(obj) {
         var storeMasterAccount = LOCAL_STORAGE.getStoreMasterAccount(key);
         var tokenAddress = LOCAL_STORAGE.getTokenAddress();
         var contract = ETH_UTIL.getContract(storeMasterAccount);
-        var nonce, sign;
-        contract.call('', 'ProxyController', 'getParticipantNonce', [tokenAddress, storeMasterAccount.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
+        var participantAddress, nonce, sign;
+        contract.call('', 'ProxyController', 'getParticipantAndNonce', [tokenAddress, storeMasterAccount.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
             if (err) {
                 console.error(err);
                 alert('error');
                 return;
             }
-            console.log(res.toString(10));
-            nonce = res.toString(10);
-            storeMasterAccount.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'address', 'uint'], [tokenAddress, 'addTerminalWithSign', key, _newAccount.getAddress(), nonce]), function(err, res) {
+            console.log(res);
+            participantAddress = res[0];
+            nonce = res[1].toString(10);
+            storeMasterAccount.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'address', 'uint'], [participantAddress, 'addTerminalWithSign', key, _newAccount.getAddress(), nonce]), function(err, res) {
                 if (err) {
                     console.error(err);
                     alert('error');
@@ -482,17 +486,18 @@ var createStore = function() {
         var storeKey = LOCAL_STORAGE.getStoreStatusSize() + 1;
         var tokenAddress = LOCAL_STORAGE.getTokenAddress();
         var creator = LOCAL_STORAGE.getCreatorAccount();
-        var nonce, sign;
+        var participantAddress, nonce, sign;
         var contract = ETH_UTIL.getContract(LOCAL_STORAGE.getCreatorAccount());
-        contract.call('', 'ProxyController', 'getParticipantNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
+        contract.call('', 'ProxyController', 'getParticipantAndNonce', [tokenAddress, creator.getAddress()], PROXY_CONTROLLER_ABI, function(err, res) {
             if (err) {
                 console.error(err);
                 alert('error');
                 return;
             }
-            console.log(res.toString(10));
-            nonce = res.toString(10);
-            creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'bytes32', 'address', 'uint', 'uint'], [tokenAddress, 'addStoreWithSign', storeKey, name, _newAccount.getAddress(), maxLiabilities, nonce]), function(err, res) {
+            console.log(res);
+            participantAddress = res[0];
+            nonce = res[1].toString(10);
+            creator.sign('', ethClient.utils.hashBySolidityType(['address', 'bytes32', 'bytes32', 'bytes32', 'address', 'uint', 'uint'], [participantAddress, 'addStoreWithSign', storeKey, name, _newAccount.getAddress(), maxLiabilities, nonce]), function(err, res) {
                 if (err) {
                     console.error(err);
                     alert('error');

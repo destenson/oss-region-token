@@ -24,8 +24,10 @@ contract RegionToken is TokenInterface {
     mapping(address => mapping(address => uint)) allowed;
 
     // Constructor
-    function RegionToken(address _owner, bytes32 _symbol, bytes32 _name) {
-        participant = new Participant(_owner);
+    function RegionToken(Participant _participant, bytes32 _symbol, bytes32 _name) {
+        // separate construct flow about Participant and RegionToken for reducing construction gas
+        participant = _participant;
+        participant.setToken();
         symbol = _symbol;
         name = _name;
     }
@@ -56,7 +58,7 @@ contract RegionToken is TokenInterface {
     // deliberately authorized the sender of the message via some mechanism; we propose
     // these standardized APIs for approval:
     function transferFrom(address _from, address _to, uint _amount) returns (bool success) {
-        if (allowed[_from][msg.sender] >= _amount && transferInternal(_from, _to, _amount)) {
+        if (allowed[_from][msg.sender] >= _amount && transferParticipantInternal(_from, _to, _amount)) {
             allowed[_from][msg.sender] -= _amount;
             return true;
         }
@@ -89,11 +91,24 @@ contract RegionToken is TokenInterface {
 
     // Case classification by condition
     function transferParticipantInternal(address _from, address _to, uint _amount) private returns (bool success) {
-        if (participant.isOwner(_from) && participant.storeAddresses(_to)) return transferFromOwnerToStore(_from, _to, _amount);
-        else if (participant.isStoreMaster(_from) && participant.isOwner(_to)) return transferFromStoreMasterToOwner(_from, _to, _amount);
-        else if (participant.isTerminal(_from) && (!participant.isOwner(_to) && !participant.storeAddresses(_to) && !participant.isTerminal(_to))) return transferFromTerminalToUser(_from, _to, _amount);
-        else if (participant.isTerminal(_to)) return transferFromUserToTerminal(_from, _to, _amount);
-        return false;
+        if (participant.owner() == _from) {
+            return participant.storeAddress(_to) ? transferFromOwnerToStore(_from, _to, _amount) : false;
+        }
+        if (participant.owner() == _to) {
+            return participant.isStoreMaster(_from) ? transferFromStoreMasterToOwner(_from, _to, _amount) : false;
+        }
+
+        if (participant.isStoreMaster(_from) || participant.isStoreMaster(_to)) return false;
+        if (participant.isStore(_from) || participant.isStore(_to)) return false;
+
+        if (participant.isTerminal(_from)) {
+            return participant.isTerminal(_to) ? false : transferFromTerminalToUser(_from, _to, _amount);
+        } else if (participant.isTerminal(_to)) {
+            return participant.isTerminal(_to) ? transferFromUserToTerminal(_from, _to, _amount) : false;
+        }
+
+        // end user to end user (If you do not want to exchange end users, return false.)
+        return transferInternal(_from, _to, _amount);
     }
 
     // store master(Actually, store master's store) -> token holder
@@ -119,7 +134,7 @@ contract RegionToken is TokenInterface {
     // token owner -> store (no check store.active or not)
     // no check store activation
     function transferFromStoreMasterToOwner(address _from, address _to, uint _amount) private returns (bool success) {
-        Store store = Store(participant.storeMasterAddresses(_from));
+        Store store = Store(participant.storeMasterAddrStoreAddr(_from));
         if (store.master() == _from && balances[store] >= _amount && _amount > 0 && totalSupply >= _amount) {
             Transfer(store, _to, _amount);
             balances[store] -= _amount;
@@ -131,7 +146,7 @@ contract RegionToken is TokenInterface {
 
     // terminal(Actually, terminal's store) -> user
     function transferFromTerminalToUser(address _from, address _to, uint _amount) private returns (bool success) {
-        Store store = Store(participant.terminalAddresses(_from));
+        Store store = Store(participant.terminalAddrStoreAddr(_from));
         if (_amount <= 0 || !store.active() || !store.terminals(_from) || balances[_to] + _amount <= balances[_to]) return false;
 
         if (balances[store] >= _amount) {
@@ -154,7 +169,7 @@ contract RegionToken is TokenInterface {
 
     // user -> terminal(store)
     function transferFromUserToTerminal(address _from, address _to, uint _amount) private returns (bool success) {
-        Store store = Store(participant.terminalAddresses(_to));
+        Store store = Store(participant.terminalAddrStoreAddr(_to));
         if (_amount <= 0 || !store.active() || !store.terminals(_to) || balances[_from] < _amount) return false;
 
         if (store.liabilities() >= _amount) {
